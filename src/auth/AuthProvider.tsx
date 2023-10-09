@@ -5,7 +5,7 @@ import type {
   AuthAction,
 } from "types/auth";
 import * as authApi from "api/auth";
-import * as authLocalSorage from "./authLocalStorage";
+import * as authLocalStorage from "./authLocalStorage";
 
 export const AuthContext = createContext({} as AuthContextType);
 
@@ -32,7 +32,7 @@ const authReducer = (state: AuthState, action: AuthAction) => {
 };
 
 const loadAuthState = (initialData: AuthState) => {
-  const restoredAuth = authLocalSorage.getAuthData();
+  const restoredAuth = authLocalStorage.getAuthData();
 
   if (!restoredAuth) return initialData;
 
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     const { user, token } = await authApi.login(email, password);
-    authLocalSorage.saveAuthData(user, token);
+    authLocalStorage.saveAuthData(user, token);
     dispatch({
       type: "login",
       payload: {
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    authLocalSorage.clearAuthData();
+    authLocalStorage.clearAuthData();
     dispatch({ type: "logout" });
   };
 
